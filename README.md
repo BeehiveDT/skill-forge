@@ -1,4 +1,8 @@
-# Skill Forge
+# Skill Forge - 阿龜技能鍛造爐
+
+*收集、打磨 AI Skills*
+
+---
 
 這個 Repo 放蜂巢數據科技內部使用的 Skills，這裡整理的會是精煉過適合我們習慣或是工作流的 Skills。
 
