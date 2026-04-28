@@ -1,5 +1,5 @@
 ---
-name: commit
+name: agri-commit
 description: Stage files with git add and create a Git commit following Conventional Commits 1.0.0. Use this skill whenever the user asks to commit, make a commit, git commit, save changes to git, or commit their work — even if they don't mention "conventional commits" explicitly.
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*)
 metadata:
