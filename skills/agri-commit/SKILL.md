@@ -21,4 +21,5 @@ metadata:
 
 - If there's nothing to commit, say so and stop.
 - When changes span unrelated concerns, suggest splitting; if the user prefers one commit, pick the type matching the primary intent.
+- **Language**: Write `type` and optional `scope` in lowercase English (feat, fix, chore, refactor, docs, etc.); write the subject and body in Traditional Chinese with Taiwanese phrasing. Example: `feat(auth): 加入 Google 登入支援`
 - **Omit the body unless it is truly necessary.** A one-line subject is preferred; only add a body when the _why_ or context cannot be inferred from the diff and the subject alone.
