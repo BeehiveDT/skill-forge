@@ -4,31 +4,31 @@
 
 ---
 
-這個 Repo 放蜂巢數據科技內部使用的 Skills，這裡整理的會是精煉過適合我們習慣或是工作流的 Skills。
+這個 Repo 放蜂巢數據科技內部使用的 skills，這裡整理的會是精煉過適合我們習慣或是工作流的 skills。
 
 ## 安裝
 
-安裝 Skill Forge 的 Skills：
+安裝 Skill Forge 的 skills：
 
 ```bash
-# 全域安裝 GitHub Copilot 版本的 Skills
+# 全域安裝 GitHub Copilot 版本的 skills
 npx skills@latest add BeehiveDT/skill-forge -g -a github-copilot -s '*'
 
-# 全域安裝 Claude Code 版本的 Skills
+# 全域安裝 Claude Code 版本的 skills
 npx skills@latest add BeehiveDT/skill-forge -g -a claude-code -s '*'
 
-# 專案範圍內安裝全部的 Skills
+# 專案範圍內安裝全部的 skills
 npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s '*'
 
-# 只安裝特定的 Skill 到專案範圍內
+# 只安裝特定的 skill 到專案範圍內
 npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s agri-commit -s agri-other-skill
 ```
 
-當然也可以選擇性安裝裡面的某些 Skills，參考下面的說明。
+當然也可以選擇性安裝裡面的某些 skills，參考下面的說明。
 
 ## Development
 
-這些 Skills 是和開發流程相關的。
+這些 skills 是和開發流程相關的。
 
 ### agri-commit
 
