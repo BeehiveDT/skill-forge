@@ -21,7 +21,7 @@ npx skills@latest add BeehiveDT/skill-forge -g -a claude-code -s '*'
 npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s '*'
 
 # 只安裝特定的 skill 到專案範圍內
-npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s agri-commit -s agri-other-skill
+npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s agri-seo-zh -s agri-seo-en
 ```
 
 當然也可以選擇性安裝裡面的某些 skills，參考下面的說明。
@@ -36,6 +36,26 @@ npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s agri-commit -s 
 
 ```bash
 npx skills@latest add BeehiveDT/skill-forge -s agri-commit
+```
+
+## SEO
+
+這些 skills 是和 SEO 內容產出相關的。
+
+### agri-seo-zh
+
+為 agriweather.com.tw 中文版新頁面 / 新文章產出 SEO meta 內容：建議 title（含現有 vs. 建議 + 變更理由）、meta description、meta keywords。
+
+```bash
+npx skills@latest add BeehiveDT/skill-forge -s agri-seo-zh
+```
+
+### agri-seo-en
+
+為 agriweather.com.tw 英文版新頁面 / 新文章產出 SEO meta 內容：建議 title（含現有 vs. 建議 + 變更理由）、meta description、meta keywords。
+
+```bash
+npx skills@latest add BeehiveDT/skill-forge -s agri-seo-en
 ```
 
 ## License
