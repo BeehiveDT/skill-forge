@@ -38,6 +38,13 @@ npx skills@latest add BeehiveDT/skill-forge -a github-copilot -s agri-seo-zh -s 
 npx skills@latest add BeehiveDT/skill-forge -s agri-commit
 ```
 
+使用方式：
+
+```
+/agri-commit
+/agri-commit 描述變更的原因或上下文
+```
+
 ## SEO
 
 這些 skills 是和 SEO 內容產出相關的。
@@ -50,12 +57,28 @@ npx skills@latest add BeehiveDT/skill-forge -s agri-commit
 npx skills@latest add BeehiveDT/skill-forge -s agri-seo-zh
 ```
 
+使用方式：
+
+```
+/agri-seo-zh https://www.agriweather.com.tw/
+/agri-seo-zh https://www.agriweather.com.tw/about
+/agri-seo-zh https://www.agriweather.com.tw/articles/123
+```
+
 ### agri-seo-en
 
 為 agriweather.com.tw 英文版新頁面 / 新文章產出 SEO meta 內容：建議 title（含現有 vs. 建議 + 變更理由）、meta description、meta keywords。
 
 ```bash
 npx skills@latest add BeehiveDT/skill-forge -s agri-seo-en
+```
+
+使用方式：
+
+```
+/agri-seo-en https://www.agriweather.com.tw/
+/agri-seo-en https://www.agriweather.com.tw/about
+/agri-seo-en https://www.agriweather.com.tw/articles/123
 ```
 
 ## License
