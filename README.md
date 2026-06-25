@@ -45,6 +45,34 @@ npx skills@latest add BeehiveDT/skill-forge -s agri-commit
 /agri-commit 描述變更的原因或上下文
 ```
 
+### agri-pr
+
+建立一個合併到 `develop` 分支的 Pull Request。
+
+```bash
+npx skills@latest add BeehiveDT/skill-forge -s agri-pr
+```
+
+使用方式：
+
+```
+/agri-pr
+```
+
+### agri-pr-fix
+
+修復 PR 中尚未 resolved 的 review comments，並將已修復的 threads 標記為 resolved。
+
+```bash
+npx skills@latest add BeehiveDT/skill-forge -s agri-pr-fix
+```
+
+使用方式：
+
+```
+/agri-pr-fix
+```
+
 ## SEO
 
 這些 skills 是和 SEO 內容產出相關的。
