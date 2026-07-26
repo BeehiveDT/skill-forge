@@ -1,14 +1,16 @@
 ---
 name: agri-build-note
 description: Draft GitHub release notes from commits since the latest tag. Use whenever the user asks to draft, generate, or create GitHub release notes, release notes／產生發布說明, mentions changelog／變更日誌, or prepare a release／準備發布. Use this even when the user only hints at cutting a release or summarizing "what changed since the last version," not just when they say "release notes" verbatim.
-allowed-tools: Bash(git log:*) Bash(git tag:*) Bash(git describe:*) Bash(git show:*) Bash(git diff:*) Bash(git rev-list:*) Bash(git rev-parse:*) Bash(git merge-base:*) Read
+metadata:
+  author: Tuvix Shih
+  version: "2026.07.26"
 ---
 
 ## Gather the release range
 
 1. Find the base tag:
    - Run `git describe --tags --abbrev=0` to get the nearest tag reachable from HEAD. Use it as the base if it succeeds.
-   - If that fails, run `git tag --sort=-v:refname` and take its first entry as a *candidate* base. This is a repo-wide, version-sorted pick, so it may be unreachable or from another branch — before trusting it, verify it is an ancestor of HEAD with `git merge-base --is-ancestor <candidate> HEAD`. If the candidate is an ancestor, use it as the base. If it is not an ancestor (or version sort is unreliable, e.g. non-semver or prefixed tags), do not use it — fall through to complete history.
+   - If that fails, run `git tag --sort=-v:refname` and take its first entry as a _candidate_ base. This is a repo-wide, version-sorted pick, so it may be unreachable or from another branch — before trusting it, verify it is an ancestor of HEAD with `git merge-base --is-ancestor <candidate> HEAD`. If the candidate is an ancestor, use it as the base. If it is not an ancestor (or version sort is unreliable, e.g. non-semver or prefixed tags), do not use it — fall through to complete history.
    - If no usable base tag is found, use the complete history.
 2. Check the range is non-empty **before** curating:
    - With a base tag, run `git rev-list --count --no-merges <base>..HEAD`. Without one, run `git rev-list --count --no-merges HEAD`.
@@ -37,7 +39,7 @@ If an outcome could fit more than one category, place it in the earliest matchin
 
 Place a breaking change in its most relevant category, prefixing its bullet exactly with `**Breaking:**`; never add a separate breaking category.
 
-**All-internal fallback.** If (and only if) the range contains commits but *none* are user-visible, do not return an empty note. Instead, summarize the most significant internal changes under `Changed`. This is the sole exception to the "every bullet is user-facing" rule. "Significant" means changes a maintainer would want recorded — notable refactors, dependency upgrades with behavioral or security relevance, or infrastructure changes that affect how the project is built or run — and excludes pure formatting, lint, and CI noise.
+**All-internal fallback.** If (and only if) the range contains commits but _none_ are user-visible, do not return an empty note. Instead, summarize the most significant internal changes under `Changed`. This is the sole exception to the "every bullet is user-facing" rule. "Significant" means changes a maintainer would want recorded — notable refactors, dependency upgrades with behavioral or security relevance, or infrastructure changes that affect how the project is built or run — and excludes pure formatting, lint, and CI noise.
 
 Curation is complete only when every included user-visible commit is categorized, related commits are consolidated, and internal-only changes have been excluded (or, under the fallback, the significant internal changes are grouped under `Changed`).
 
@@ -47,7 +49,7 @@ Curation is complete only when every included user-visible commit is categorized
 
 **Normal case.** Return exactly one fenced Markdown code block and nothing else: no preface, conclusion, version heading, or date. Include only non-empty headings, in the order shown below.
 
-The block below is a *layout reference* that lists all six possible headings and English placeholder bullets. In real output, replace the placeholders with actual entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
+The block below is a _layout reference_ that lists all six possible headings and English placeholder bullets. In real output, replace the placeholders with actual entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
 
 ```markdown
 ### Added
