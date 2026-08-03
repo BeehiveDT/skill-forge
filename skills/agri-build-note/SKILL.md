@@ -1,97 +1,100 @@
 ---
 name: agri-build-note
-description: Draft GitHub release notes from commits since the latest tag. Use whenever the user asks to draft, generate, or create GitHub release notes, release notes／產生發布說明, mentions changelog／變更日誌, or prepare a release／準備發布. Use this even when the user only hints at cutting a release or summarizing "what changed since the last version," not just when they say "release notes" verbatim.
+description: Summarize what changed between the previous version bump and the current one. Use whenever the user bumps an internal version and wants the diff since the last bump — 列出自上次 bump 以來的變更, produce an internal changelog delta, or 比較這次改版與前一次改版的差異. Use this even when the user only says they "bumped the version" and wants to know what changed since last time, not just when they say "release notes."
 metadata:
   author: Tuvix Shih
-  version: "2026.07.26"
+  version: "2026.08.03"
 ---
 
-## Gather the release range
+## How this skill anchors
 
-1. Find the base tag:
-   - Run `git describe --tags --abbrev=0` to get the nearest tag reachable from HEAD. Use it as the base if it succeeds.
-   - If that fails, run `git tag --sort=-v:refname` and take its first entry as a _candidate_ base. This is a repo-wide, version-sorted pick, so it may be unreachable or from another branch — before trusting it, verify it is an ancestor of HEAD with `git merge-base --is-ancestor <candidate> HEAD`. If the candidate is an ancestor, use it as the base. If it is not an ancestor (or version sort is unreliable, e.g. non-semver or prefixed tags), do not use it — fall through to complete history.
-   - If no usable base tag is found, use the complete history.
-2. Check the range is non-empty **before** curating:
-   - With a base tag, run `git rev-list --count --no-merges <base>..HEAD`. Without one, run `git rev-list --count --no-merges HEAD`.
-   - If the count is `0` (e.g. HEAD is exactly at the latest tag), there is nothing to release. Stop and follow the empty-range rule in the Output section — do not fabricate entries.
-3. List the commits:
-   - With a base tag: `git log <base>..HEAD --no-merges --pretty=format:"%h %s"`.
+This skill compares the **previous version bump** with the **current one**. The anchor is the commit where the project's version string last changed — not a git tag and not a public release.
+
+**Precondition:** run this after the version file already holds the new (current) version. The bump may be committed or still uncommitted in the working tree; the working-tree value is treated as the current version. If you run it _before_ editing the version, the anchor will be off by one bump.
+
+## Locate the version anchor
+
+1. Identify the version file (source of truth). If the user names one, use it. Otherwise check, in order, for the first that exists:
+   - `config/version.yaml` or `config/version.yml` — a `ninthday/version` (Laravel) version file. **This is the expected default for this project.**
+   - `pyproject.toml` → `[project].version` or `[tool.poetry].version`
+   - `package.json` → `.version`
+   - `Cargo.toml` → `[package].version`
+   - `VERSION` or `version.txt` → the whole-file string
+     Note: a Laravel project's `composer.json` usually has **no** `version` field — do not rely on it. If none of the above is found, or two disagree, stop and ask which file holds the version.
+2. Read the current version from the **working tree** with the Read tool (so an uncommitted bump still counts) and derive the semantic version `V_current`:
+   - For a `ninthday/version` file, assemble it **only** from the `current` block: `V_current = "{label}{major}.{minor}.{patch}"`, where `label` is optional (e.g. `label: v` → `v1.3.3`; no label → `1.3.3`). **Ignore every other field** — `build.number`, `build.git-local`, `cache`, `format`, etc. change on ordinary builds and must never be treated as a version change.
+   - For the other file types, parse their single version field.
+3. Find the anchor commit `A` — the most recent commit whose version differs from `V_current`:
+   - List commits that touched the version file, newest first: `git log --format=%H -- <file>`.
+   - Walk them newest → oldest. For each commit `C`, read its version with `git show C:<file>` and derive its semantic version using the **same rule as step 2** (for `ninthday/version`, assemble `{label}{major}.{minor}.{patch}` from `current` and ignore all other fields). The first `C` whose derived version != `V_current` is the anchor `A`. (Commits that touched the file but left `current.major/minor/patch` unchanged — e.g. a `build.number` refresh or a dependency edit — are skipped automatically, because their derived version still equals `V_current`. In most repos `A` is only one or two commits back.)
+   - If no such commit exists (the version has never differed, or the file has no prior history), there is no previous bump: use the complete history as the range and note this is the first recorded bump.
+4. Confirm the range is non-empty: `git rev-list --count --no-merges <A>..HEAD` (without an anchor: `git rev-list --count --no-merges HEAD`). If it is `0`, stop and report that nothing changed since the previous bump — do not fabricate entries.
+5. List the commits in range:
+   - With an anchor: `git log <A>..HEAD --no-merges --pretty=format:"%h %s"`.
    - Without one: `git log --no-merges --pretty=format:"%h %s"`.
-4. Read details only when needed. When a subject is ambiguous or insufficient to establish user impact, inspect the change — but start with `git show --stat <commit>` (or `git diff --stat`) and only read the full diff for the specific files needed to judge user impact. Do not infer a user-visible change from an internal-looking subject alone.
-5. Recover PR references if required. `--no-merges` drops merge commits, so in a merge-commit workflow the PR title/number may live on the merge commit. Only when the project records PR numbers (see step 6) and the non-merge subjects lack them, additionally run `git log <base>..HEAD --merges --pretty=format:"%h %s"` to recover PR references. Still describe outcomes, never the merges themselves.
-6. If `CHANGELOG.md` exists, read it only to match its language, terminology, tone, and PR-number convention. Do not create or modify it.
+6. Read details only when a subject is ambiguous. Start with `git show --stat <commit>` or `git diff --stat`, and read the full diff only for the specific files needed to judge the change.
 
 ## Curate changes
 
-Include every user-visible commit. Combine duplicate or related commits into one user-facing outcome. Exclude internal noise such as CI, test-only, build, tooling, formatting, and maintenance changes when they have no user-visible impact.
+This is an **internal** bump-to-bump diff, not a public release note, so **keep internal changes** — refactors, tooling, dependency, and infrastructure work are usually exactly what the reviewer wants to see. Drop only genuinely trivial churn (whitespace/formatting-only commits, lockfile-only noise) unless the user asks to keep even those.
 
-Classify each outcome using [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), in this order:
+Combine duplicate or related commits into a single outcome. Classify each outcome using [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), in this order:
 
-1. `Added` - new user-facing capability.
-2. `Changed` - changed behavior of an existing capability.
-3. `Deprecated` - capability marked for future removal.
+1. `Added` - new capability, module, or endpoint.
+2. `Changed` - changed behavior of something that already existed.
+3. `Deprecated` - marked for future removal.
 4. `Removed` - removed capability.
 5. `Fixed` - repaired incorrect behavior.
 6. `Security` - security repair.
+7. `Internal` - refactors, tooling, dependencies, CI, and other changes with no outward behavior change. This category is specific to this internal-diff use and is **not** part of Keep a Changelog; omit it when empty.
 
-If an outcome could fit more than one category, place it in the earliest matching category in the list order above.
+If an outcome could fit more than one category, place it in the earliest matching category above (`Internal` is always the last resort).
 
-Place a breaking change in its most relevant category, prefixing its bullet exactly with `**Breaking:**`; never add a separate breaking category.
-
-**All-internal fallback.** If (and only if) the range contains commits but _none_ are user-visible, do not return an empty note. Instead, summarize the most significant internal changes under `Changed`. This is the sole exception to the "every bullet is user-facing" rule. "Significant" means changes a maintainer would want recorded — notable refactors, dependency upgrades with behavioral or security relevance, or infrastructure changes that affect how the project is built or run — and excludes pure formatting, lint, and CI noise.
-
-Curation is complete only when every included user-visible commit is categorized, related commits are consolidated, and internal-only changes have been excluded (or, under the fallback, the significant internal changes are grouped under `Changed`).
+Mark a breaking change by prefixing its bullet exactly with `**Breaking:**` inside its most relevant category; never add a separate breaking category.
 
 ## Output
 
-**Empty range.** If step 2 found zero commits in the range, do not emit a code block. Return a single plain-text line and nothing else: `No releasable changes since <base>.` (use the actual base tag; if there was no base tag, write `No releasable changes found.`).
+**Empty range.** If the range has zero commits, do not emit a code block. Return a single plain-text line and nothing else: `No changes since the previous bump (<V_current>).`
 
-**Normal case.** Return exactly one fenced Markdown code block and nothing else: no preface, conclusion, version heading, or date. Include only non-empty headings, in the order shown below.
+**Normal case.** Return exactly one fenced Markdown code block and nothing else — no preface or conclusion. Begin with a single version-delta heading, then only the non-empty category headings in the order above.
 
-The block below is a _layout reference_ that lists all six possible headings and English placeholder bullets. In real output, replace the placeholders with actual entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
+The block below is a _layout reference_ listing possible headings with English placeholders. In real output, fill in real entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
 
 ```markdown
+## <V_previous> → <V_current>
+
 ### Added
 
-- One user-facing change
+- One change
 
 ### Changed
 
-- One user-facing change
-
-### Deprecated
-
-- One user-facing change
-
-### Removed
-
-- One user-facing change
+- One change
 
 ### Fixed
 
-- One user-facing change
+- One change
 
-### Security
+### Internal
 
-- One user-facing change
+- One change
 ```
+
+`<V_current>` is the working-tree version; `<V_previous>` is the version value at anchor `A`. If there was no anchor (first recorded bump), use `initial → <V_current>` as the heading.
 
 ## Writing rules
 
-- Each bullet is one line, user-facing, and describes the impact — not the implementation. (The only exception is the all-internal fallback above.)
-- Do not include commit hashes or author names. PR numbers are fine if the existing CHANGELOG.md already uses them.
+- Each bullet is one line and describes the change and its effect — not line-level implementation detail.
+- Do not include commit hashes or author names. PR numbers are fine if the project's existing changelog already uses them.
 - Merge duplicate or related commits into a single bullet.
-- Skip purely internal noise (lint config tweaks, CI-only changes, formatting passes, dependency bumps without user impact) unless that's all that exists — then apply the all-internal fallback and group the significant ones under `Changed`.
+- Keep meaningful internal changes (see Curate); drop only trivial churn.
 
 ### Output language
 
 Resolve the bullet-description language in this order:
 
-1. If the user explicitly requests an output language, use it.
-2. Otherwise, if `CHANGELOG.md` exists, match its language.
-3. Otherwise, default to English.
+1. The language the user explicitly requests.
+2. Otherwise, the language of an existing `CHANGELOG.md` if present.
+3. Otherwise, English.
 
-Regardless of the resolved language, the six type headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`) and the `**Breaking:**` marker are ALWAYS in English — even when the user explicitly asks to translate the notes into another language. Only the bullet descriptions are translated; these fixed labels never are.
-
-- Omit empty change types entirely.
+The category headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`, `Internal`) and the `**Breaking:**` marker are ALWAYS in English, even when the bullets are translated. Only the bullet descriptions and the version values in the delta heading follow the resolved language.
