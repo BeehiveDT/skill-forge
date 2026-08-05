@@ -23,6 +23,8 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 當然也可以選擇性安裝裡面的某些 skills，參考下面的說明。
 
+---
+
 ## Development
 
 這些 skills 是和開發流程相關的。
@@ -70,6 +72,8 @@ npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agr
 /agri-pr-fix
 ```
 
+---
+
 ## SEO
 
 這些 skills 是和 SEO 內容產出相關的。
@@ -105,6 +109,8 @@ npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agr
 /agri-seo-en https://www.agriweather.com.tw/about
 /agri-seo-en https://www.agriweather.com.tw/articles/123
 ```
+
+---
 
 ## License
 
