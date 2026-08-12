@@ -56,31 +56,27 @@ Mark a breaking change by prefixing its bullet exactly with `**Breaking:**` insi
 
 **Empty range.** If the range has zero commits, do not emit a code block. Return a single plain-text line and nothing else: `No changes since the previous bump (<V_current>).`
 
-**Normal case.** Return exactly one fenced Markdown code block and nothing else — no preface or conclusion. Begin with a single version-delta heading, then only the non-empty category headings in the order above.
+**Normal case.** Return exactly one fenced Markdown code block and nothing else — no preface or conclusion. Begin with a single version-and-date heading, then only the non-empty category headings in the order above.
 
 The block below is a _layout reference_ listing possible headings with English placeholders. In real output, fill in real entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
 
 ```markdown
-## <V_previous> → <V_current>
+## <V_current> (<YYYY-MM-DD>)
 
 ### Added
-
 - One change
 
 ### Changed
-
 - One change
 
 ### Fixed
-
 - One change
 
 ### Internal
-
 - One change
 ```
 
-`<V_current>` is the working-tree version; `<V_previous>` is the version value at anchor `A`. If there was no anchor (first recorded bump), use `initial → <V_current>` as the heading.
+`<V_current>` is the working-tree version. `<YYYY-MM-DD>` is the date on which the Skill runs, formatted as an ISO 8601 calendar date (for example, `2026-08-09`). The anchor `A` determines the commit range only; it is not shown in the heading.
 
 ## Writing rules
 
@@ -97,4 +93,4 @@ Resolve the bullet-description language in this order:
 2. Otherwise, the language of an existing `CHANGELOG.md` if present.
 3. Otherwise, English.
 
-The category headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`, `Internal`) and the `**Breaking:**` marker are ALWAYS in English, even when the bullets are translated. Only the bullet descriptions and the version values in the delta heading follow the resolved language.
+The category headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`, `Internal`) and the `**Breaking:**` marker are ALWAYS in English, even when the bullets are translated. Only the bullet descriptions follow the resolved language.
