@@ -61,7 +61,7 @@ Mark a breaking change by prefixing its bullet exactly with `**Breaking:**` insi
 The block below is a _layout reference_ listing possible headings with English placeholders. In real output, fill in real entries, drop every empty heading, and write bullets in the resolved output language (see Writing rules).
 
 ```markdown
-## <V_current> (<YYYY-MM-DD>)
+## `v<V_current>` (<YYYY-MM-DD>)
 
 ### Added
 - One change
