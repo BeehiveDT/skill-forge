@@ -54,7 +54,22 @@ metadata:
 
 ## PR 留言
 
-僅在本次範圍是 PR 時，完成 review 後以 `gh pr comment <number> --body <review-result>` 將完整 review 結果留言到該 PR。留言內容與輸出結果相同，包含採用的 PR 範圍與每個問題；沒有問題時，也留言 `未發現可確認的基本錯誤。`
+僅在本次範圍是 PR 時，完成 review 後以 `gh pr comment <number> --body <review-comment>` 留言。留言不重複 PR 編號，且固定使用下列格式：
+
+```md
+## 🤖 Code Review
+
+✅ 未發現可確認的基本錯誤。
+```
+
+若有問題，改為：
+
+```md
+## 🤖 Code Review
+
+⚠️ 發現 <N> 個可確認問題。
+
+- `檔案:行號`：<可確認的錯誤>。會造成 <直接影響>。建議 <最小修正>。
+```
 
 若留言指令失敗，保留 review 結果並明確說明留言未成功；不得宣稱結果已發布。
-
