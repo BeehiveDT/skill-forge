@@ -44,6 +44,20 @@ npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agr
 /agri-commit 描述變更的原因或上下文
 ```
 
+### agri-code-review
+
+快速檢查程式碼變更，找出可確認的問題。
+
+```bash
+npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-code-review
+```
+
+使用方式：
+
+```
+/agri-code-review
+```
+
 ### agri-pr
 
 建立一個合併到 `develop` 分支的 Pull Request。
