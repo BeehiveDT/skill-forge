@@ -21,7 +21,7 @@ rm -rf ~/.gemini/skills
 ln -sfn ../.agents/skills ~/.gemini/skills
 ```
 
-當然也可以選擇性安裝裡面的某些 skills，參考下面的 Skills 表格。
+當然也可以選擇性安裝裡面的某些 skills。
 
 ---
 
