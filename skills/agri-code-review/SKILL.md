@@ -57,7 +57,7 @@ metadata:
 僅在本次範圍是 PR 時，完成 review 後以 `gh pr comment <number> --body <review-comment>` 留言。留言不重複 PR 編號，且固定使用下列格式：
 
 ```md
-## 🤖 Code Review
+## 🐢 Code Review
 
 ✅ 未發現可確認的基本錯誤。
 ```
@@ -65,7 +65,7 @@ metadata:
 若有問題，改為：
 
 ```md
-## 🤖 Code Review
+## 🐢 Code Review
 
 ⚠️ 發現 <N> 個可確認問題。
 

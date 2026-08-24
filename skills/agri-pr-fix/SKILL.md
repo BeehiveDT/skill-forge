@@ -1,76 +1,40 @@
 ---
 name: agri-pr-fix
-description: Fetches unresolved review comments on the current pull request using GitHub GraphQL API, then presents them to the user for triage before making any changes. Use when user asks to fix PR comments, address review feedback, or check PR review status.
-allowed-tools: Bash(gh pr view:*), Bash(gh api graphql:*)
+description: Fixes actionable findings in the latest Code Review comment on the current pull request. Use when the user asks to address pull request review feedback.
+allowed-tools: Bash(*)
 metadata:
   author: Lucas Yang
-  version: "2026.06.25"
+  version: "2026.08.24"
 ---
 
 # agri-pr-fix
 
-## 工作流程
+## 流程
 
-1. 取得當前分支對應的 PR 號碼
-2. 使用 GraphQL API 查詢**尚未 resolved** 的 review comments
-3. 將結果呈現給使用者，並等待確認後再處理
-4. 修復完成後，將已處理的 review threads 標記為 resolved
+1. 以 `gh pr view --json number` 取得目前分支的 PR。取得不到 PR 時，回報沒有可處理的 PR 後結束。
+2. 取得 body 以 `## 🐢 Code Review` 開頭的最新留言：
 
-## 步驟一：取得 PR 號碼
+   ```bash
+   gh pr view --json comments --jq '[.comments[] | select(.body | startswith("## 🐢 Code Review"))] | sort_by(.createdAt) | last'
+   ```
 
-```bash
-gh pr view --json number --jq '.number'
+   找不到這類留言，或最新留言沒有提出問題時，回報沒有可修正項目後結束。
+3. 逐項閱讀留言指出的位置與必要的直接資料流，以最小修改修正留言描述的影響。
+4. 對每個修正執行最貼近已修改契約的既有測試；沒有適用測試時，執行功能 smoke test。
+5. 驗證完成後，以 `gh pr comment <PR_NUMBER> --body <fix-comment>` 發布一則修正摘要。
+
+## PR 留言
+
+```md
+## 🐢 PR Fixed
+
+✅ 已修正 <N> 個 Code Review 問題。
+
+- `檔案:行號`：<修正內容>。驗證：<實際執行的測試或 smoke test>。
 ```
 
-## 步驟二：GraphQL 查詢未 resolved 的 comments
+每次修復只發布一則摘要，涵蓋本次所有已修正項目。
 
-```bash
-gh api graphql -f query='
-query($owner: String!, $repo: String!, $pr: Int!) {
-  repository(owner: $owner, name: $repo) {
-    pullRequest(number: $pr) {
-      reviewThreads(first: 50) {
-        nodes {
-          id
-          isResolved
-          comments(first: 1) {
-            nodes {
-              author { login }
-              body
-              path
-              line
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-}' \
--F owner="{owner}" \
--F repo="{repo}" \
--F pr=<PR_NUMBER>
-```
+## 回報
 
-## 步驟三：呈現並等待確認
-
-從結果中過濾出 `isResolved: false` 的 threads，整理後呈現給使用者，並詢問是否要開始處理。確認後才開始處理這些 comments。
-
-## 步驟四：將已修復的 threads 標記為 Resolved
-
-每處理完一個 comment 後，使用 `resolveReviewThread` mutation 將對應 thread 標記為 resolved，傳入步驟二取得的 thread `id`：
-
-```bash
-gh api graphql -f query='
-mutation($threadId: ID!) {
-  resolveReviewThread(input: { threadId: $threadId }) {
-    thread {
-      id
-      isResolved
-    }
-  }
-}' \
--F threadId="<THREAD_ID>"
-```
-
-逐一處理完所有確認要修復的 comments 後，回報已 resolved 的數量。
+列出本次採用的 Code Review 留言，以及每個已修正項目的位置、修正內容與實際驗證結果。
