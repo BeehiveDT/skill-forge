@@ -21,108 +21,21 @@ rm -rf ~/.gemini/skills
 ln -sfn ../.agents/skills ~/.gemini/skills
 ```
 
-當然也可以選擇性安裝裡面的某些 skills，參考下面的說明。
+當然也可以選擇性安裝裡面的某些 skills，參考下面的 Skills 表格。
 
 ---
 
-## Development
+## Skills
 
-這些 skills 是和開發流程相關的。
-
-### agri-commit
-
-自動依照 Conventional Commits 1.0.0 規範建立 Git commit。會根據變更內容來產生符合規範的提交訊息。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-commit
-```
-
-使用方式：
-
-```
-/agri-commit
-/agri-commit 描述變更的原因或上下文
-```
-
-### agri-code-review
-
-快速檢查程式碼變更，找出可確認的問題。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-code-review
-```
-
-使用方式：
-
-```
-/agri-code-review
-```
-
-### agri-pr
-
-建立一個合併到 `develop` 分支的 Pull Request。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-pr
-```
-
-使用方式：
-
-```
-/agri-pr
-```
-
-### agri-pr-fix
-
-修復 PR 中尚未 resolved 的 review comments，並將已修復的 threads 標記為 resolved。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-pr-fix
-```
-
-使用方式：
-
-```
-/agri-pr-fix
-```
-
----
-
-## SEO
-
-這些 skills 是和 SEO 內容產出相關的。
-
-### agri-seo-zh
-
-為 agriweather.com.tw 中文版新頁面 / 新文章產出 SEO meta 內容：建議 title（含現有 vs. 建議 + 變更理由）、meta description、meta keywords。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-seo-zh
-```
-
-使用方式：
-
-```
-/agri-seo-zh https://www.agriweather.com.tw/
-/agri-seo-zh https://www.agriweather.com.tw/about
-/agri-seo-zh https://www.agriweather.com.tw/articles/123
-```
-
-### agri-seo-en
-
-為 agriweather.com.tw 英文版新頁面 / 新文章產出 SEO meta 內容：建議 title（含現有 vs. 建議 + 變更理由）、meta description、meta keywords。
-
-```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-seo-en
-```
-
-使用方式：
-
-```
-/agri-seo-en https://www.agriweather.com.tw/
-/agri-seo-en https://www.agriweather.com.tw/about
-/agri-seo-en https://www.agriweather.com.tw/articles/123
-```
+| Name | Description |
+|------|-------------|
+| [agri-build-note](./skills/agri-build-note/SKILL.md) | 列出內部版本 bump 後與上次的差異，產出內部 changelog |
+| [agri-code-review](./skills/agri-code-review/SKILL.md) | 快速檢查程式碼變更，找出可確認的問題 |
+| [agri-commit](./skills/agri-commit/SKILL.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
+| [agri-pr](./skills/agri-pr/SKILL.md) | 建立一個合併到 `develop` 分支的 Pull Request |
+| [agri-pr-fix](./skills/agri-pr-fix/SKILL.md) | 修復 PR 中尚未 resolved 的 review comments |
+| [agri-seo-en](./skills/agri-seo-en/SKILL.md) | 為 agriweather.com.tw 英文版頁面產出 SEO meta 內容 |
+| [agri-seo-zh](./skills/agri-seo-zh/SKILL.md) | 為 agriweather.com.tw 中文版頁面產出 SEO meta 內容 |
 
 ---
 
