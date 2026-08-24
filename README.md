@@ -29,13 +29,13 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 | Name | Description |
 |------|-------------|
-| [agri-build-note](./skills/agri-build-note/SKILL.md) | 列出內部版本 bump 後與上次的差異，產出內部 changelog |
-| [agri-code-review](./skills/agri-code-review/SKILL.md) | 快速檢查程式碼變更，找出可確認的問題 |
-| [agri-commit](./skills/agri-commit/SKILL.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
-| [agri-pr](./skills/agri-pr/SKILL.md) | 建立一個合併到 `develop` 分支的 Pull Request |
-| [agri-pr-fix](./skills/agri-pr-fix/SKILL.md) | 修復目前 Pull Request 最新 Code Review 留言中可直接處理的問題 |
-| [agri-seo-en](./skills/agri-seo-en/SKILL.md) | 為 agriweather.com.tw 英文版頁面產出 SEO meta 內容 |
-| [agri-seo-zh](./skills/agri-seo-zh/SKILL.md) | 為 agriweather.com.tw 中文版頁面產出 SEO meta 內容 |
+| [agri-build-note](./skills/agri-build-note/README.md) | 列出內部版本 bump 後與上次的差異，產出內部 changelog |
+| [agri-code-review](./skills/agri-code-review/README.md) | 快速檢查程式碼變更，找出可確認的問題 |
+| [agri-commit](./skills/agri-commit/README.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
+| [agri-pr](./skills/agri-pr/README.md) | 建立一個合併到 `develop` 分支的 Pull Request |
+| [agri-pr-fix](./skills/agri-pr-fix/README.md) | 修復目前 Pull Request 最新 Code Review 留言中可直接處理的問題 |
+| [agri-seo-en](./skills/agri-seo-en/README.md) | 為 agriweather.com.tw 英文版頁面產出 SEO meta 內容 |
+| [agri-seo-zh](./skills/agri-seo-zh/README.md) | 為 agriweather.com.tw 中文版頁面產出 SEO meta 內容 |
 
 ---
 
