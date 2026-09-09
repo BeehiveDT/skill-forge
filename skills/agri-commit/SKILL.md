@@ -4,14 +4,14 @@ description: Stage files with git add and create a Git commit following Conventi
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*)
 metadata:
   author: Lucas Yang
-  version: "2026.04.19"
+  version: "2026.09.09"
 ---
 
 # Git Commit (Conventional Commits 1.0.0)
 
 ## Workflow
 
-1. Run `git status` to assess the state (staged, unstaged, untracked).
+1. Run `git status --long` and use its complete human-readable output as the source of truth for staged, unstaged, and untracked files.
 2. **If both staged and unstaged content coexist**, commit only what's already staged — leave unstaged modifications untouched. Mention this choice briefly so the user knows the unstaged files were skipped.
 3. If nothing is staged yet, run `git add -A` automatically.
 4. Read `git diff --cached` to understand the changes, then compose a Conventional Commits 1.0.0 message.
