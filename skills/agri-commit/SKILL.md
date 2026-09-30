@@ -4,7 +4,7 @@ description: Stage files with git add and create a Git commit following Conventi
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*)
 metadata:
   author: Lucas Yang
-  version: "2026.09.09"
+  version: "2026.09.30"
 ---
 
 # Git Commit (Conventional Commits 1.0.0)
@@ -19,6 +19,7 @@ metadata:
 
 ## Notes
 
+- Execute Git commands directly; do not route them through Eval, scripts, or other indirect execution methods.
 - If there's nothing to commit, say so and stop.
 - When changes span unrelated concerns, suggest splitting; if the user prefers one commit, pick the type matching the primary intent.
 - **Language**: Write `type` and optional `scope` in lowercase English (feat, fix, chore, refactor, docs, etc.); write the subject and body in Traditional Chinese with Taiwanese phrasing. Example: `feat(auth): 加入 Google 登入支援`
