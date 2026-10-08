@@ -1,6 +1,7 @@
 ---
 name: agri-build-note
 description: Summarize what changed between the previous version bump and the current one. Use whenever the user bumps an internal version and wants the diff since the last bump — 列出自上次 bump 以來的變更, produce an internal changelog delta, or 比較這次改版與前一次改版的差異. Use this even when the user only says they "bumped the version" and wants to know what changed since last time, not just when they say "release notes."
+disable-model-invocation: true
 metadata:
   author: Tuvix Shih
   version: "2026.08.03"

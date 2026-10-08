@@ -1,6 +1,7 @@
 ---
 name: agri-seo-en
 description: Generate SEO content for agriweather.com.tw English pages — a title suggestion (current vs. suggested + reason), a plain-text meta description, and plain-text meta keywords. Trigger proactively when the user needs SEO meta content for an AgriWeather English page.
+disable-model-invocation: true
 metadata:
   version: "2026.05.25"
 ---

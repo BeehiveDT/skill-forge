@@ -1,7 +1,6 @@
 ---
 name: agri-pr
 description: Creates a GitHub Pull Request targeting the develop branch, following the team's Gitflow where develop is the integration branch and main is reserved for production releases. Use when user asks to create a PR, open a pull request, or submit changes for review.
-allowed-tools: Bash(git status:*), Bash(git push:*), Bash(git log:*), Bash(gh pr create:*), Bash(gh pr view:*)
 metadata:
   author: Lucas Yang
   version: "2026.06.25"

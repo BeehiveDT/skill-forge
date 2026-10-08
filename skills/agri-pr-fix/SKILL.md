@@ -1,7 +1,6 @@
 ---
 name: agri-pr-fix
 description: Fixes actionable findings in the latest Code Review comment on the current pull request. Use when the user asks to address pull request review feedback.
-allowed-tools: Bash(*)
 metadata:
   author: Lucas Yang
   version: "2026.08.24"

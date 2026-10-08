@@ -1,6 +1,7 @@
 ---
 name: agri-seo-zh
 description: 為 agriweather.com.tw 中文版新文章 / 新頁面產生 SEO 三欄資訊：title 建議（含現有 vs. 建議 + 變更理由）、meta description 純值、meta keywords 純值。當使用者要為 AgriWeather（阿龜微氣候）中文版頁面產生 SEO meta 內容時主動使用。
+disable-model-invocation: true
 metadata:
   version: "2026.05.25"
 ---
