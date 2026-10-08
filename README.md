@@ -15,7 +15,7 @@
 npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s '*'
 
 # 同步更新 Antigravity 版本的 skills
-# WIndows 上需要在執行完 skills CLI 後就執行一次
+# Windows 上需要在執行完 skills CLI 後就執行一次
 # (因為目前 skills CLI 還不支援 Antigravity 全域安裝)
 rm -rf ~/.gemini/skills
 ln -sfn ../.agents/skills ~/.gemini/skills
@@ -36,6 +36,7 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 | [agri-pr-fix](./skills/agri-pr-fix/README.md) | 修復目前 Pull Request 最新 Code Review 留言中可直接處理的問題 |
 | [agri-seo-en](./skills/agri-seo-en/README.md) | 為 agriweather.com.tw 英文版頁面產出 SEO meta 內容 |
 | [agri-seo-zh](./skills/agri-seo-zh/README.md) | 為 agriweather.com.tw 中文版頁面產出 SEO meta 內容 |
+| [agri-write-research-notebook](./skills/agri-write-research-notebook/SKILL.md) | 依計劃書撰寫繁體中文研發紀錄簿 |
 
 ---
 
