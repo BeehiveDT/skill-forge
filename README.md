@@ -36,7 +36,7 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 | [agri-pr-fix](./skills/agri-pr-fix/README.md) | 修復目前 Pull Request 最新 Code Review 留言中可直接處理的問題 |
 | [agri-seo-en](./skills/agri-seo-en/README.md) | 為 agriweather.com.tw 英文版頁面產出 SEO meta 內容 |
 | [agri-seo-zh](./skills/agri-seo-zh/README.md) | 為 agriweather.com.tw 中文版頁面產出 SEO meta 內容 |
-| [agri-write-research-notebook](./skills/agri-write-research-notebook/SKILL.md) | 依計劃書撰寫繁體中文研發紀錄簿 |
+| [agri-write-research-notebook](./skills/agri-write-research-notebook/README.md) | 依計劃書撰寫繁體中文研發紀錄簿 |
 
 ---
 
