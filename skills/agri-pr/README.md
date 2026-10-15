@@ -1,6 +1,6 @@
 # agri-pr
 
-建立目標分支為 `develop` 的 GitHub Pull Request。
+建立以 `develop` 為目標分支的 GitHub Pull Request，供變更審查使用。
 
 ## 安裝
 
