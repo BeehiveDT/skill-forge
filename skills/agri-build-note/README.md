@@ -8,6 +8,14 @@
 
 ---
 
+## 安裝
+
+```bash
+npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-build-note
+```
+
+---
+
 ## 這個 Skill 做什麼
 
 - 讀取版本檔，取得目前版本 `V_current`。
@@ -184,12 +192,3 @@ Skill 的 `allowed-tools` 限定為一組唯讀 git 指令加 `Read`。兩點提
 ## 關於名稱
 
 `name` 目前是 `agri-build-note`。Skill 現在做的是「bump 間的變更比較」，與農業無關、也不是 build note。若要改成更貼切的名稱（例如 `bump-diff`），記得**資料夾名與 `name` 一併修改**，並注意這會改變它在 skill 清單中的顯示與叫用方式。
-
----
-
-## 安裝與放置
-
-把 `SKILL.md` 放進 skills 目錄：
-
-- 個人層級（所有專案可用）：`~/.claude/skills/agri-build-note/SKILL.md`
-- 專案層級（跟著 repo 走、team 共用）：`<repo>/.claude/skills/agri-build-note/SKILL.md`
