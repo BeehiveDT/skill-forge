@@ -29,6 +29,7 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 | Name | Description |
 |------|-------------|
+| [agri-branch](./skills/agri-branch/README.md) | 從 `main` 或 `develop` 開立工作分支；已在其他分支時維持原分支 |
 | [agri-commit](./skills/agri-commit/README.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
 | [agri-code-review](./skills/agri-code-review/README.md) | 快速檢查程式碼變更，找出可確認的問題 |
 | [agri-pr](./skills/agri-pr/README.md) | 建立一個合併到 `develop` 分支的 Pull Request |
