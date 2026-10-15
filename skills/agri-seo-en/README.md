@@ -1,6 +1,6 @@
 # agri-seo-en
 
-為 AgriWeather 英文頁面產生 SEO title、meta description 與 meta keywords。
+為阿龜微氣候官網英文頁面產生 SEO title、meta description 與 meta keywords。
 
 ## 安裝
 
