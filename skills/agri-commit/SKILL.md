@@ -1,6 +1,6 @@
 ---
 name: agri-commit
-description: Stage files with git add and create a Git commit following Conventional Commits 1.0.0. Use this skill whenever the user asks to commit, make a commit, git commit, save changes to git, or commit their work — even if they don't mention "conventional commits" explicitly.
+description: Stage files with git add and create a Git commit following Conventional Commits 1.0.0. Use this skill whenever the user asks to commit, make a commit, git commit, save changes to git, or commit their work, even if they don't mention "conventional commits" explicitly.
 allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git add:*), Bash(git commit:*)
 metadata:
   author: Lucas Yang
@@ -12,7 +12,7 @@ metadata:
 ## Workflow
 
 1. Run `git status --long` and use its complete human-readable output as the source of truth for staged, unstaged, and untracked files.
-2. **If both staged and unstaged content coexist**, commit only what's already staged — leave unstaged modifications untouched. Mention this choice briefly so the user knows the unstaged files were skipped.
+2. **If both staged and unstaged content coexist**, commit only what's already staged; leave unstaged modifications untouched. Mention this choice briefly so the user knows the unstaged files were skipped.
 3. If nothing is staged yet, run `git add -A` automatically.
 4. Read `git diff --cached` to understand the changes, then compose a Conventional Commits 1.0.0 message.
 5. Commit using a heredoc to preserve multi-line formatting, then confirm with the resulting hash.
