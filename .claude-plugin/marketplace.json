@@ -1,0 +1,32 @@
+{
+  "name": "beehivedt-skill-forge",
+  "plugins": [
+    {
+      "name": "workflow-skills",
+      "source": "./",
+      "skills": [
+        "./skills/agri-branch",
+        "./skills/agri-build-note",
+        "./skills/agri-code-review",
+        "./skills/agri-commit",
+        "./skills/agri-pr",
+        "./skills/agri-pr-fix"
+      ]
+    },
+    {
+      "name": "seo-skills",
+      "source": "./",
+      "skills": [
+        "./skills/agri-seo-en",
+        "./skills/agri-seo-zh"
+      ]
+    },
+    {
+      "name": "writing-skills",
+      "source": "./",
+      "skills": [
+        "./skills/agri-write-research-notebook"
+      ]
+    }
+  ]
+}
