@@ -3,7 +3,7 @@ name: agri-pr
 description: Create a GitHub Pull Request targeting develop when asked to open a PR or submit changes for review.
 metadata:
   author: Lucas Yang
-  version: "2026.10.15"
+  version: "2026.10.21"
   credits:
     - skill: show-me
       author: Dex Horthy
@@ -17,7 +17,7 @@ metadata:
 
 # agri-pr
 
-## 工作流程
+## 流程
 
 1. 確認目前所在分支（不可在 `main` 或 `develop` 上直接建立 PR）
 2. 確認遠端有推送最新 commit（若未推送，先執行 `git push`）
@@ -200,6 +200,6 @@ gh pr create \
 
 ## 注意事項
 
-- 團隊 Gitflow：`feat/*` / `fix/*`／`chore/*` → `develop` → `main`（僅正式發佈用）
-- PR 標題根據 commit 訊息與變更內容生成，不需使用者手動輸入
-- 若 `develop` 分支不存在，先詢問使用者確認目標分支
+- 團隊 Gitflow：`feat/*`／`fix/*`／`chore/*` → `develop` → `main`（正式發佈）。
+- PR 標題根據 commit 訊息與變更內容生成，不需使用者手動輸入。
+- 若 `develop` 分支不存在，先詢問使用者確認目標分支。

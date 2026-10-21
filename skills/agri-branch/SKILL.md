@@ -3,12 +3,12 @@ name: agri-branch
 description: Creates a Git branch for the current task when branch creation is requested.
 metadata:
   author: Lucas Yang
-  version: "2026.10.16"
+  version: "2026.10.21"
 ---
 
 # agri-branch
 
-## 工作流程
+## 流程
 
 1. 用 `git branch --show-current` 確認目前分支；不在 `main` 或 `develop` 就維持原分支並結束。
 2. 用 `git status --long` 查看工作區變更，作為命名的補充資訊；以使用者描述的工作內容為主要依據。
@@ -18,4 +18,4 @@ metadata:
 ## 注意事項
 
 - 只負責開分支；提交、推送與建立 PR 由各自流程處理。
-- 團隊 Gitflow 為 `feat/*`／`fix/*`／`chore/*` → `develop` → `main`（正式發佈）。
+- 團隊 Gitflow：`feat/*`／`fix/*`／`chore/*` → `develop` → `main`（正式發佈）。
