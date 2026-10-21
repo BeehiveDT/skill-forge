@@ -7,20 +7,20 @@ metadata:
   version: "2026.09.30"
 ---
 
-# Git Commit (Conventional Commits 1.0.0)
+# agri-commit
 
-## Workflow
+## 流程
 
-1. Run `git status --long` and use its complete human-readable output as the source of truth for staged, unstaged, and untracked files.
-2. **If both staged and unstaged content coexist**, commit only what's already staged; leave unstaged modifications untouched. Mention this choice briefly so the user knows the unstaged files were skipped.
-3. If nothing is staged yet, run `git add -A` automatically.
-4. Read `git diff --cached` to understand the changes, then compose a Conventional Commits 1.0.0 message.
-5. Commit using a heredoc to preserve multi-line formatting, then confirm with the resulting hash.
+1. 執行 `git status --long`，以完整輸出確認哪些檔案已暫存 (staged)、尚未暫存 (unstaged) 或未受追蹤 (untracked)。
+2. **如果同時有已暫存與未暫存的變更**，只提交已暫存的內容，保留未暫存的變更。簡短告知使用者哪些變更未納入這次提交。
+3. 如果沒有已暫存的內容，自動執行 `git add -A`。
+4. 閱讀 `git diff --cached`，了解即將提交的變更，再依 Conventional Commits 1.0.0 撰寫提交訊息。
+5. 使用 heredoc 提交，以保留多行訊息的格式；完成後提供提交的 hash。
 
-## Notes
+## 注意事項
 
-- Execute Git commands directly; do not route them through Eval, scripts, or other indirect execution methods.
-- If there's nothing to commit, say so and stop.
-- When changes span unrelated concerns, suggest splitting; if the user prefers one commit, pick the type matching the primary intent.
-- **Language**: Write `type` and optional `scope` in lowercase English (feat, fix, chore, refactor, docs, etc.); write the subject and body in Traditional Chinese with Taiwanese phrasing. Example: `feat(auth): 加入 Google 登入支援`
-- **Omit the body unless it is truly necessary.** A one-line subject is preferred; only add a body when the _why_ or context cannot be inferred from the diff and the subject alone.
+- 直接執行 Git 指令，不要透過 Eval、腳本或其他間接方式呼叫。
+- 如果沒有任何內容可提交，告知使用者後停止。
+- 如果變更涉及不相關的事項，建議拆成不同提交；如果使用者希望合併成一筆，就依主要目的選擇 `type`。
+- **語言**：`type` 與選填的 `scope` 使用小寫英文（例如 feat、fix、chore、refactor、docs）；標題與內文使用台灣慣用的繁體中文。例如：`feat(auth): 加入 Google 登入支援`
+- **除非確實需要，否則省略內文。** 優先使用單行標題；只有無法從差異與標題看出原因或背景時，才加入內文。
