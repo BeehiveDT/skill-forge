@@ -27,12 +27,23 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 ## Workflow
 
+```mermaid
+flowchart LR
+    F["實作功能"] --> A["/agri-branch<br/>開分支"]
+    A --> B["/agri-commit<br/>提交變更"]
+    B --> C["/agri-pr<br/>建立 PR"]
+    C --> D["/agri-code-review<br/>進行 PR review"]
+    D --> E["/agri-pr-fix<br/>修正 PR review 留言"]
+    E --> D
+    E --> G["Merge PR"]
+```
+
 | Name | Description |
 |------|-------------|
 | [agri-branch](./skills/agri-branch/README.md) | 為目前工作建立 Git 分支 |
 | [agri-commit](./skills/agri-commit/README.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
-| [agri-code-review](./skills/agri-code-review/README.md) | 快速檢查程式碼變更，找出可確認的問題 |
 | [agri-pr](./skills/agri-pr/README.md) | 建立以 `develop` 為目標分支的 GitHub Pull Request，供變更審查使用 |
+| [agri-code-review](./skills/agri-code-review/README.md) | 快速檢查程式碼變更，找出可確認的問題 |
 | [agri-pr-fix](./skills/agri-pr-fix/README.md) | 修復目前 Pull Request 最新 Code Review 留言中可直接處理的問題 |
 | [agri-build-note](./skills/agri-build-note/README.md) | 列出內部版本 bump 後與上次的差異，產出內部 changelog |
 
