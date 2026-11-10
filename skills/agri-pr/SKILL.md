@@ -1,9 +1,9 @@
 ---
 name: agri-pr
-description: Create a GitHub Pull Request targeting develop when asked to open a PR or submit changes for review.
+description: Create a GitHub Pull Request when asked to open a PR or submit changes for review, targeting develop or a version branch.
 metadata:
   author: Lucas Yang
-  version: "2026.10.21"
+  version: "2026.11.10"
   credits:
     - skill: show-me
       author: Dex Horthy
@@ -17,13 +17,18 @@ metadata:
 
 # agri-pr
 
+## 分支
+
+- 工作分支常用 `feat/*`、`fix/*` 或 `chore/*`；`main`、`develop` 與版本號分支（如 `1.x`、`2.x`）是基底分支，不直接從中建立 PR。
+- 目標分支：使用者指定時，以指定分支為準；否則優先選遠端 `develop`（專案），沒有才從遠端版本號分支 `<主版本號>.x`（套件，如 `1.x`、`2.x`）中，按主版本號數值選最大的分支。套件的版本號分支命名參考 Laravel 官方套件，版本號分支用於開發與正式發佈。沒有可用的目標分支就停止並回報，不推送或建立 PR。
+
 ## 流程
 
-1. 確認目前所在分支（不可在 `main` 或 `develop` 上直接建立 PR）
-2. 確認遠端有推送最新 commit（若未推送，先執行 `git push`）
-3. 使用 `gh pr create` 建立 PR，目標分支預設為 `develop`
-4. 根據 commit 紀錄生成 PR 標題
-5. PR body 使用以下範本
+1. 用 `git branch --show-current` 確認目前分支；若在上述基底分支，就停止執行。
+2. 用 `git ls-remote --heads origin` 確認遠端分支，依上述規則選定目標分支；指定分支不存在，或沒有可用目標時，停止並回報。
+3. 確認遠端有推送最新 commit；若未推送，先執行 `git push`。
+4. 根據 commit 紀錄生成 PR 標題，並依下方範本撰寫 PR body。
+5. 使用 `gh pr create --base <目標分支>` 建立 PR；指令失敗就回報，不能宣稱 PR 已建立。
 
 ## PR Body 範本
 
@@ -191,15 +196,13 @@ Blast Radius 指這個 PR 可能影響的範圍。考量各種可能情況，例
 # 推送當前分支（若尚未推送）
 git push -u origin HEAD
 
-# 建立 PR
+# 使用流程中選定的目標分支
 gh pr create \
-  --base develop \
+  --base "<目標分支>" \
   --title "<根據 commit 訊息與變更內容生成>" \
   --body "<PR Body 內容>"
 ```
 
 ## 注意事項
 
-- 團隊 Gitflow：`feat/*`／`fix/*`／`chore/*` → `develop` → `main`（正式發佈）。
 - PR 標題根據 commit 訊息與變更內容生成，不需使用者手動輸入。
-- 若 `develop` 分支不存在，先詢問使用者確認目標分支。
