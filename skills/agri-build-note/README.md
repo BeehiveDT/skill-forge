@@ -11,7 +11,7 @@
 ## 安裝
 
 ```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-build-note
+npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s agri-build-note
 ```
 
 ---

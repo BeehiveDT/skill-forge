@@ -5,7 +5,7 @@
 ## 安裝
 
 ```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-write-research-notebook
+npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s agri-write-research-notebook
 ```
 
 ## 使用方式

@@ -5,7 +5,7 @@
 ## 安裝
 
 ```bash
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s agri-pr-fix
+npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s agri-pr-fix
 ```
 
 ## 使用方式

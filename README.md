@@ -12,7 +12,7 @@
 
 ```bash
 # 全域安裝 Claude Code 和 Codex 版本的 skills
-npx -y skills@latest add BeehiveDT/skill-forge -g -a claude-code -a codex -s '*'
+npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s '*'
 
 # 同步更新 Antigravity 版本的 skills
 # Windows 上需要在執行完 skills CLI 後就執行一次
