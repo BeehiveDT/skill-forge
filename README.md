@@ -27,17 +27,6 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 ## Workflow
 
-```mermaid
-flowchart LR
-    F["實作功能"] --> A["/agri-branch<br/>開分支"]
-    A --> B["/agri-commit<br/>提交變更"]
-    B --> C["/agri-pr<br/>建立 PR"]
-    C --> D["/agri-code-review<br/>進行 PR review"]
-    D --> E["/agri-pr-fix<br/>修正 PR review 留言"]
-    E --> D
-    E --> G["Merge PR"]
-```
-
 | Name | Description |
 |------|-------------|
 | [agri-branch](./skills/agri-branch/README.md) | 為目前工作建立 Git 分支 |
