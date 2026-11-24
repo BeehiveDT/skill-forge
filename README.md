@@ -29,6 +29,7 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 
 | Name | Description |
 |------|-------------|
+| [agri-brief-review](./skills/agri-brief-review/README.md) | 檢查 product brief 的重大問題，以及實作是否違背產品意圖 |
 | [agri-branch](./skills/agri-branch/README.md) | 為目前工作建立 Git 分支 |
 | [agri-commit](./skills/agri-commit/README.md) | 依照 Conventional Commits 1.0.0 規範建立 Git commit |
 | [agri-pr](./skills/agri-pr/README.md) | 建立以 `develop` 為目標分支的 GitHub Pull Request，供變更審查使用 |

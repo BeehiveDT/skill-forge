@@ -5,6 +5,7 @@
       "name": "workflow-skills",
       "source": "./",
       "skills": [
+        "./skills/agri-brief-review",
         "./skills/agri-branch",
         "./skills/agri-build-note",
         "./skills/agri-code-review",
