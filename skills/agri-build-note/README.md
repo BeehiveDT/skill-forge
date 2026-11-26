@@ -48,7 +48,7 @@ npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s agri-build-note
 
 ### ⚠️ 執行時機（唯一容易踩雷的地方）
 
-**要在「版本檔已經改成新版本之後」執行。** 已 commit 或還在工作目錄中未 commit 都可以——Skill 讀的是工作目錄的值。
+**要在「這輪程式碼都已 commit，且版本檔已經改成新版本」之後執行。** 僅版本檔本身的 bump 可以留在工作目錄未 commit；其餘未 commit 的程式碼變更不會納入統計（因為範圍只統計到 `HEAD`）。
 
 若你在**改版本號之前**就跑，`V_current` 還是舊值，錨點會往前多抓一格，範圍就會涵蓋到上上次 bump。
 
@@ -56,17 +56,17 @@ npx -y skills@latest add BeehiveDT/skill-forge -g -a codex -s agri-build-note
 
 ## 版本檔支援
 
-依下列順序自動偵測第一個存在的檔案：
+依下列層級順序自動偵測第一個存在且含版本值的檔案：
 
 | 順序 | 檔案 | 取值方式 |
 | --- | --- | --- |
-| 1 | `config/version.yaml` / `.yml` | `ninthday/yaml` 格式，見下方 |
+| 1 | `config/version.yaml` / `.yml` | `ninthday/yaml` 格式，見下方（Laravel 專案預設） |
 | 2 | `pyproject.toml` | `[project].version` 或 `[tool.poetry].version` |
 | 3 | `package.json` | `.version` |
 | 4 | `Cargo.toml` | `[package].version` |
-| 5 | `VERSION` / `version.txt` | 整個檔案內容 |
+| 5 | `SEMVERSION` / `VERSION` / `version.txt` | 整個檔案內容（shell script 專案使用 `SEMVERSION`，如 `1.3.2`） |
 
-若都找不到、或多個檔案版本不一致，Skill 會停下來問你以哪個為準。你也可以在提問時直接指定檔案。
+跨層級同時存在多個版本檔（例如 Laravel + Vue 專案同時有 `config/version.yaml` 與 `package.json`）時，會自動依上表優先序取較高層級者。僅當都找不到、或**同一層級**多個檔案（例如 `config/version.yaml` 與 `.yml`，或 `SEMVERSION`、`VERSION` 與 `version.txt`）並存且版本不一致時，Skill 才會停下來問你以哪個為準。你也可以在提問時直接指定檔案。
 
 > **注意**：Laravel 專案的 `composer.json` 通常**沒有** `version` 欄位，所以不在偵測清單中。
 
@@ -82,7 +82,7 @@ current:
   patch: 3
 ```
 
-版本值只由 `current` 區塊組成：`{label}{major}.{minor}.{patch}` → **`v1.3.3`**。`label` 不存在時就沒有前綴（`1.3.3`）。
+版本值只由 `current` 區塊組成 `{label}{major}.{minor}.{patch}`，並會自動去掉前導 `v`/`V` 正規化為 `V_current`（例如 `label: v` + `1.3.3` → **`1.3.3`**）。輸出標題固定補上單一 `v` 前綴（`## \`v1.3.3\``），避免出現 `vv1.3.3`。
 
 **其他欄位一律忽略**，包含 `build.number`、`build.git-local`、`cache`、`format` 等。這點很關鍵：`build` 區塊會在一般建置時變動，如果比對整個檔案就會一直誤判成 bump；只比語意版本才不會。
 
@@ -109,8 +109,8 @@ current:
 ## 輸出格式
 
 - 只輸出一段 fenced Markdown code block，沒有前言或結語。
-- 開頭是版本與日期標題 `## <V_current> (<YYYY-MM-DD>)`，日期為執行當日的 ISO 8601 日曆日期。
-- 只包含**非空**的分類，順序固定為 `Added → Changed → Deprecated → Removed → Fixed → Security → Internal`。
+- 開頭是版本與日期標題 ``## `v<V_current>` (<YYYY-MM-DD>)``（保證只有單一 `v` 前綴），日期為執行當日的 ISO 8601 日曆日期。
+- 只包含**非空**的分類，顯示順序固定為 `Added → Changed → Deprecated → Removed → Fixed → Security → Internal`。
 - breaking change 放進最相關的分類，bullet 前綴 `**Breaking:**`，不另開分類。
 
 範例：
@@ -133,19 +133,19 @@ current:
 
 ### 分類與內部變更
 
-前六個分類沿用 [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/)。第七個 `Internal` 是本 Skill 為「內部 bump 比較」新增的，**不屬於** Keep a Changelog 規範，用來收重構、工具、依賴、CI 等沒有外部行為改變的項目。
+前六個分類沿用 [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/)。第七個 `Internal` 是本 Skill 為「內部 bump 比較」新增的，**不屬於** Keep a Changelog 規範，用來收重構、工具、依賴、CI 等沒有外部行為改變的項目。當安全修補同時符合 `Fixed` 與 `Security` 時，分類上以 `Security` 優先（輸出順序仍維持 `Fixed` 在 `Security` 之前）。
 
-因為這是內部比較而非對外發布，Skill **會保留**內部變更——這通常正是你 review 時想看到的。只有真正瑣碎的雜訊（純空白／格式化、只動 lockfile）會被濾掉。若你希望連這些都保留，執行時直接說明即可。
+因為這是內部比較而非對外發布，Skill **會保留**內部變更——這通常正是你 review 時想看到的。以下項目會自動略過：僅異動版本檔或 `CHANGELOG.md` 的純 bump commit、在同一區間內已被 revert 且無淨變更的項目，以及真正瑣碎的雜訊（純空白／格式化、只動 lockfile；若希望保留雜訊，執行時直接說明即可）。若排除後剩餘 0 筆有效變更，會直接走空區間輸出。
 
 ### 語言規則
 
-bullet 描述的語言依以下優先序決定：
+輸出語言依以下優先序決定：
 
 1. 使用者明確指定的語言。
 2. 否則，比照現有 `CHANGELOG.md` 的語言。
 3. 否則，預設英文。
 
-**分類標題與 `**Breaking:**` 標記永遠保持英文**，即使 bullet 被翻譯成其他語言也一樣。
+**分類標題與 `**Breaking:**` 標記永遠保持英文**，即使 bullet 被翻譯成其他語言也一樣；bullet 描述與空區間提示訊息皆跟隨上述輸出語言規則。
 
 ---
 
@@ -154,11 +154,14 @@ bullet 描述的語言依以下優先序決定：
 | 情況 | Skill 的行為 |
 | --- | --- |
 | **改版本號之前就執行** | 錨點往前多抓一格，範圍會涵蓋到上上次 bump。請務必先改版本再跑。 |
-| **版本檔已改但範圍內無 commit** | 回傳 `No changes since the previous bump (<V_current>).`，不會硬湊內容。 |
-| **第一次記錄 bump（找不到更早的版本）** | 以完整歷史為範圍，標題仍使用 `## <V_current> (<YYYY-MM-DD>)`。 |
+| **有未 commit 的程式碼變更** | 範圍只統計到 `HEAD`，未 commit 的程式碼不會納入（僅版本檔可未 commit）。 |
+| **已先 commit 純 bump 變更** | 僅動到版本檔或 `CHANGELOG.md` 的 commit 會自動略過；若混合實質程式變更則保留程式變更。 |
+| **同區間內改動已被 revert** | 以 `git diff <A>..HEAD` 確認無淨變更後自動略過。 |
+| **範圍內無 commit 或過濾後為空** | 不輸出 code block，依輸出語言回傳單行純文字（英文範例：`No changes since the previous bump (v<V_current>).`），不會硬湊內容。 |
+| **第一次記錄 bump（找不到更早的版本）** | 以完整歷史為範圍，省略首次 bump 額外提示語以維持單一 code block 格式，標題仍使用 ``## `v<V_current>` (<YYYY-MM-DD>)``。 |
 | **只有 `build.number` 變動** | 不算 bump，會被自動跳過，不影響錨點判斷。 |
 | **版本檔異動未進 git 歷史** | 錨點靠 git 歷史尋找，若舊版本從未 commit 過就找不到錨點，會退回完整歷史。 |
-| **多個版本檔且不一致** | 停下來詢問以哪個為準。 |
+| **多個版本檔並存** | 跨層級時自動採用優先序較高者；僅同層級並存且版本不一致時停下來詢問。 |
 | **大型 diff** | 先看 `--stat`，必要時才讀特定檔案的完整 diff，避免灌爆 context。 |
 
 ---

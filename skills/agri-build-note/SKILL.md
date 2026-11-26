@@ -4,42 +4,48 @@ description: Summarize what changed between the previous version bump and the cu
 disable-model-invocation: true
 metadata:
   author: Tuvix Shih
-  version: "2026.08.03"
+  version: "2026.11.26"
 ---
 
 ## How this skill anchors
 
 This skill compares the **previous version bump** with the **current one**. The anchor is the commit where the project's version string last changed — not a git tag and not a public release.
 
-**Precondition:** run this after the version file already holds the new (current) version. The bump may be committed or still uncommitted in the working tree; the working-tree value is treated as the current version. If you run it _before_ editing the version, the anchor will be off by one bump.
+**Precondition:** run this after all code changes for the bump are committed and the version file already holds the new (current) version. Only the version file bump may remain uncommitted in the working tree; uncommitted code changes are excluded because the commit range ends at `HEAD`. If you run it _before_ editing the version, the anchor will be off by one bump.
 
 ## Locate the version anchor
 
-1. Identify the version file (source of truth). If the user names one, use it. Otherwise check, in order, for the first that exists:
-   - `config/version.yaml` or `config/version.yml` — a `ninthday/version` (Laravel) version file. **This is the expected default for this project.**
+1. Identify the version file (source of truth). If the user names one, use it. Otherwise check, in tier order, for the first tier that contains a valid version file (with a version value):
+   - `config/version.yaml` or `config/version.yml` — a `ninthday/version` (Laravel) version file (default for Laravel projects).
    - `pyproject.toml` → `[project].version` or `[tool.poetry].version`
    - `package.json` → `.version`
    - `Cargo.toml` → `[package].version`
-   - `VERSION` or `version.txt` → the whole-file string
-     Note: a Laravel project's `composer.json` usually has **no** `version` field — do not rely on it. If none of the above is found, or two disagree, stop and ask which file holds the version.
-2. Read the current version from the **working tree** with the Read tool (so an uncommitted bump still counts) and derive the semantic version `V_current`:
-   - For a `ninthday/version` file, assemble it **only** from the `current` block: `V_current = "{label}{major}.{minor}.{patch}"`, where `label` is optional (e.g. `label: v` → `v1.3.3`; no label → `1.3.3`). **Ignore every other field** — `build.number`, `build.git-local`, `cache`, `format`, etc. change on ordinary builds and must never be treated as a version change.
-   - For the other file types, parse their single version field.
+   - `SEMVERSION`, `VERSION`, or `version.txt` → the whole-file string (`SEMVERSION` is used in shell script projects, e.g. `1.3.2`)
+     Note: a Laravel project's `composer.json` usually has **no** `version` field — do not rely on it. Cross-tier coexistence (e.g., `config/version.yaml` alongside `package.json`) resolves automatically by tier priority. Stop and ask which file holds the version only if none of the above tiers contains a version, or if two files in the **same tier** (e.g., both `config/version.yaml` and `config/version.yml`, or multiple files among `SEMVERSION`, `VERSION`, and `version.txt`) exist and disagree.
+2. Read the current version from the **working tree** with the Read tool (so an uncommitted bump still counts) and derive the normalized semantic version `V_current` with any leading `v` or `V` stripped (so `v1.3.3`, `V1.3.3`, and `1.3.3` all normalize to `1.3.3`):
+   - For a `ninthday/version` file, assemble it **only** from the `current` block (`"{label}{major}.{minor}.{patch}"`, where `label` is optional), then strip any leading `v` or `V` (e.g., `label: v` + `1.3.3` → `1.3.3`). **Ignore every other field** — `build.number`, `build.git-local`, `cache`, `format`, etc. change on ordinary builds and must never be treated as a version change.
+   - For the other file types, parse their single version field and strip any leading `v` or `V`.
 3. Find the anchor commit `A` — the most recent commit whose version differs from `V_current`:
    - List commits that touched the version file, newest first: `git log --format=%H -- <file>`.
-   - Walk them newest → oldest. For each commit `C`, read its version with `git show C:<file>` and derive its semantic version using the **same rule as step 2** (for `ninthday/version`, assemble `{label}{major}.{minor}.{patch}` from `current` and ignore all other fields). The first `C` whose derived version != `V_current` is the anchor `A`. (Commits that touched the file but left `current.major/minor/patch` unchanged — e.g. a `build.number` refresh or a dependency edit — are skipped automatically, because their derived version still equals `V_current`. In most repos `A` is only one or two commits back.)
-   - If no such commit exists (the version has never differed, or the file has no prior history), there is no previous bump: use the complete history as the range and note this is the first recorded bump.
-4. Confirm the range is non-empty: `git rev-list --count --no-merges <A>..HEAD` (without an anchor: `git rev-list --count --no-merges HEAD`). If it is `0`, stop and report that nothing changed since the previous bump — do not fabricate entries.
+   - Walk them newest → oldest. For each commit `C`, read its version with `git show C:<file>` and derive its normalized semantic version using the **same rule as step 2** (for `ninthday/version`, assemble `{label}{major}.{minor}.{patch}` from `current`, strip any leading `v`/`V`, and ignore all other fields). The first `C` whose derived version != `V_current` is the anchor `A`. (Commits that touched the file but left `current.major/minor/patch` unchanged — e.g. a `build.number` refresh or a dependency edit — are skipped automatically, because their derived version still equals `V_current`. In most repos `A` is only one or two commits back.)
+   - If no such commit exists (the version has never differed, or the file has no prior history), there is no previous bump: use the complete history as the range and omit any first-bump note so the output stays a single fenced Markdown code block.
+4. Confirm the range is non-empty: `git rev-list --count --no-merges <A>..HEAD` (without an anchor: `git rev-list --count --no-merges HEAD`). If it is `0`, follow the **Empty range** output rule — do not fabricate entries.
 5. List the commits in range:
    - With an anchor: `git log <A>..HEAD --no-merges --pretty=format:"%h %s"`.
    - Without one: `git log --no-merges --pretty=format:"%h %s"`.
-6. Read details only when a subject is ambiguous. Start with `git show --stat <commit>` or `git diff --stat`, and read the full diff only for the specific files needed to judge the change.
+6. Read details only when a subject is ambiguous. Start with `git show --stat <commit>` or `git diff --stat`, and read the full diff only for the specific files needed to judge the change. When revert commits appear in the range, check `git diff <A>..HEAD -- <path>` (or `git diff --stat <A>..HEAD`) to confirm whether any net change remains.
 
 ## Curate changes
 
-This is an **internal** bump-to-bump diff, not a public release note, so **keep internal changes** — refactors, tooling, dependency, and infrastructure work are usually exactly what the reviewer wants to see. Drop only genuinely trivial churn (whitespace/formatting-only commits, lockfile-only noise) unless the user asks to keep even those.
+This is an **internal** bump-to-bump diff, not a public release note, so **keep internal changes** — refactors, tooling, dependency, and infrastructure work are usually exactly what the reviewer wants to see. Drop:
 
-Combine duplicate or related commits into a single outcome. Classify each outcome using [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), in this order:
+- Bump-only commits that touch only the version file and/or `CHANGELOG.md` (if a commit mixes a version bump with real code changes, keep the code changes).
+- Changes reverted within the same range that leave no net diff in `git diff <A>..HEAD`.
+- Genuinely trivial churn (whitespace/formatting-only commits, lockfile-only noise), unless the user asks to keep even those.
+
+If zero qualifying changes remain after dropping the above, follow the **Empty range** output rule — do not emit an empty code block or fabricate entries.
+
+Combine duplicate or related commits into a single outcome. Classify each outcome using [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/), rendered in this order:
 
 1. `Added` - new capability, module, or endpoint.
 2. `Changed` - changed behavior of something that already existed.
@@ -49,13 +55,13 @@ Combine duplicate or related commits into a single outcome. Classify each outcom
 6. `Security` - security repair.
 7. `Internal` - refactors, tooling, dependencies, CI, and other changes with no outward behavior change. This category is specific to this internal-diff use and is **not** part of Keep a Changelog; omit it when empty.
 
-If an outcome could fit more than one category, place it in the earliest matching category above (`Internal` is always the last resort).
+`Security` always takes precedence over `Fixed` when classifying an outcome (so security fixes are never absorbed into `Fixed`); for all other overlaps, place the outcome in the earliest matching category above (`Internal` is always the last resort). Rendered section headings still follow the display order above (`Fixed` before `Security`).
 
 Mark a breaking change by prefixing its bullet exactly with `**Breaking:**` inside its most relevant category; never add a separate breaking category.
 
 ## Output
 
-**Empty range.** If the range has zero commits, do not emit a code block. Return a single plain-text line and nothing else: `No changes since the previous bump (<V_current>).`
+**Empty range.** If the commit range has zero commits or zero qualifying changes remain after curation, do not emit a code block. Return a single plain-text line in the resolved output language (see Output language) and nothing else — in English: `No changes since the previous bump (v<V_current>).` (for example, in Traditional Chinese: `自上次版本 bump 以來沒有變更（v<V_current>）。`).
 
 **Normal case.** Return exactly one fenced Markdown code block and nothing else — no preface or conclusion. Begin with a single version-and-date heading, then only the non-empty category headings in the order above.
 
@@ -77,7 +83,7 @@ The block below is a _layout reference_ listing possible headings with English p
 - One change
 ```
 
-`<V_current>` is the working-tree version. `<YYYY-MM-DD>` is the date on which the Skill runs, formatted as an ISO 8601 calendar date (for example, `2026-08-09`). The anchor `A` determines the commit range only; it is not shown in the heading.
+`<V_current>` is the normalized working-tree version without a leading `v`, so the heading always renders with a single `v` (for example, `` `v1.3.3` ``). `<YYYY-MM-DD>` is the date on which the Skill runs, formatted as an ISO 8601 calendar date (for example, `2026-08-09`). The anchor `A` determines the commit range only; it is not shown in the heading.
 
 ## Writing rules
 
@@ -88,10 +94,10 @@ The block below is a _layout reference_ listing possible headings with English p
 
 ### Output language
 
-Resolve the bullet-description language in this order:
+Resolve the output language in this order:
 
 1. The language the user explicitly requests.
 2. Otherwise, the language of an existing `CHANGELOG.md` if present.
 3. Otherwise, English.
 
-The category headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`, `Internal`) and the `**Breaking:**` marker are ALWAYS in English, even when the bullets are translated. Only the bullet descriptions follow the resolved language.
+The category headings (`Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`, `Internal`) and the `**Breaking:**` marker are ALWAYS in English, even when the bullets are translated. Both the bullet descriptions and the empty-range message follow the resolved language.
