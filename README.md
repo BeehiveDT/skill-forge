@@ -44,12 +44,6 @@ ln -sfn ../.agents/skills ~/.gemini/skills
 | [agri-seo-zh](./skills/agri-seo-zh/README.md) | 為阿龜微氣候官網中文版頁面產出 SEO meta 內容 |
 | [agri-seo-en](./skills/agri-seo-en/README.md) | 為阿龜微氣候官網英文版頁面產出 SEO meta 內容 |
 
-## Writing
-
-| Name | Description |
-|------|-------------|
-| [agri-write-research-notebook](./skills/agri-write-research-notebook/README.md) | 依計劃書撰寫繁體中文研發紀錄簿 |
-
 ---
 
 ## License
